@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Конфигуратор верстака</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+   <div class="left">
+
+<div id="imageContainer">
+
+    <div class="workbenchPreview">
+
+        <div id="workbenchPreview">
+
+            <div id="backLayers"></div>
+
+            <img id="workbenchImage" src="">
+
+            <div id="frontLayers"></div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+    <div class="right">
+
+        <h1>Конфигуратор верстака</h1>
+
+        <label>Ширина</label>
+        <select id="size"></select>
+
+        <label>Тип верстака</label>
+        <select id="workbenchType"></select>
+
+        <label>Стільниця</label>
+        <select id="top"></select>
+
+        <div id="cabinet1Block">
+
+            <label>Тумба-1</label>
+
+            <select id="leftCabinet"></select>
+
+        </div>
+
+        <div id="cabinet2Block">
+
+            <label>Тумба-2</label>
+
+            <select id="rightCabinet"></select>
+
+        </div>
+
+        <div id="options">
+
+            <h3>Додаткові опції</h3>
+
+        </div>
+
+        <div class="result">
+
+            <span>Вартість</span>
+
+            <div id="price">
+
+                0 грн
+
+            </div>
+
+        </div>
+<div id="liveOrderPreview"></div>
+
+<button id="addToCart">
+    🛒 Додати в кошик
+</button>
+
+
+<div id="orderList">
+
+    <h2>Замовлення</h2>
+
+    <div id="orderItems"></div>
+
+    <h3>
+        Разом:
+        <span id="orderTotal">0 грн</span>
+    </h3>
+
+</div>
+
+
+<button id="addWorkbench">
+    ➕ Додати ще верстак
+</button>
+
+
+<div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+
+    <button id="downloadPdf">
+        📄 Завантажити PDF
+    </button>
+
+    <button id="sendEmail">
+        📧 Надіслати на Email
+    </button>
+
+    <button id="printOrder">
+        🖨 Роздрукувати
+    </button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="addedModal" class="modal">
+
+    <div class="modalBox">
+
+        <div class="modalIcon">
+            ✔
+        </div>
+
+        <h2>Верстак додано</h2>
+
+        <p id="modalText"></p>
+
+        <button id="continueBtn">
+            Продовжити конфігурацію
+        </button>
+
+        <button id="orderBtn" class="secondaryBtn">
+            Перейти до замовлення
+        </button>
+
+    </div>
+
+</div>
+<div id="emailModal" class="modal">
+
+    <div class="modalBox">
+
+        <h2>Надіслати запит</h2>
+
+        <label>Ваше ім’я</label>
+        <input
+            type="text"
+            id="clientName"
+            placeholder="Ім’я"
+        >
+
+        <label>Телефон</label>
+        <input
+            type="tel"
+            id="clientPhone"
+            placeholder="+380..."
+        >
+
+        <label>Email</label>
+        <input
+            type="email"
+            id="clientEmail"
+            placeholder="example@email.com"
+        >
+
+        <label>Коментар</label>
+        <textarea
+            id="clientComment"
+            placeholder="Коментар до замовлення"
+        ></textarea>
+
+        <button id="submitEmailRequest">
+            📧 Надіслати запит
+        </button>
+
+        <button id="closeEmailModal" class="secondaryBtn">
+            Скасувати
+        </button>
+
+    </div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script src="script.js"></script>
+<iframe
+    name="emailHiddenFrame"
+    style="display:none;">
+</iframe>
+</body>
+
+</html>

@@ -1,0 +1,346 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:420px 1fr;
+    gap:30px;
+    background:white;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 10px 35px rgba(0,0,0,.12);
+}
+
+.left{
+    background:#fff;
+    position:relative;
+    padding:20px;
+    min-height:700px;
+    align-self:start;
+}
+
+
+.right{
+    padding:35px;
+}
+
+h1{
+    margin-bottom:25px;
+    color:#1f2937;
+}
+
+label{
+    display:block;
+    margin-top:18px;
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#444;
+}
+
+select{
+    width:100%;
+    padding:12px;
+    border:1px solid #d6d6d6;
+    border-radius:8px;
+    font-size:15px;
+}
+
+.checks{
+    margin-top:25px;
+}
+
+.checks label{
+    font-weight:normal;
+    margin-bottom:10px;
+}
+
+.result{
+    margin-top:35px;
+    background:#f3f6fb;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+}
+
+#price{
+    font-size:34px;
+    font-weight:bold;
+    color:#ec1111;
+    margin-top:10px;
+}
+
+button{
+    width:100%;
+    margin-top:25px;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#ebfc07;
+    color:rgb(0, 0, 0);
+    font-size:18px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#000000;
+    color:#ffffff;
+}
+#imageContainer{
+    position:relative;
+    width:380px;
+    height:700px;
+    margin:auto;
+}
+
+#backLayers,
+#frontLayers{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+}
+
+#backLayers{
+    z-index:1;
+}
+
+#workbenchImage{
+    position:absolute;
+    left:0;
+    bottom:0;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    z-index:2;
+}
+
+#frontLayers{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:3;
+}
+
+#backLayers img,
+#frontLayers img{
+    position:absolute;
+    object-fit:contain;
+}
+.layerImage{
+    position:absolute;
+    left:0;
+    top:40px;
+    width:380px;
+    object-fit:contain;
+}
+/* ===================== MODAL ===================== */
+
+.modal{
+
+    position:fixed;
+
+    left:0;
+    top:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,.45);
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+.modalBox{
+
+    width:420px;
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:35px;
+
+    text-align:center;
+
+    box-shadow:0 15px 50px rgba(0,0,0,.25);
+
+    animation:popup .25s ease;
+
+}
+
+@keyframes popup{
+
+    from{
+
+        transform:scale(.85);
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+        opacity:1;
+
+    }
+
+}
+
+.modalIcon{
+
+    width:90px;
+    height:90px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    background:#38c172;
+
+    color:white;
+
+    font-size:48px;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.modalBox h2{
+
+    margin-bottom:12px;
+
+}
+
+.modalBox p{
+
+    color:#666;
+
+    margin-bottom:25px;
+
+    line-height:1.5;
+
+}
+
+.modalBox button{
+
+    margin-top:12px;
+
+}
+
+.secondaryBtn{
+
+    background:white;
+
+    color:#333;
+
+    border:2px solid #ddd;
+
+}
+
+.secondaryBtn:hover{
+
+    background:#f5f5f5;
+
+}
+#orderActions{
+    margin-top:25px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+#orderActions button{
+
+    width:100%;
+    padding:14px;
+
+    border:none;
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:17px;
+    font-weight:bold;
+
+}
+
+#downloadPdf{
+
+    background:#d32f2f;
+    color:white;
+
+}
+
+#downloadPdf:hover{
+
+    background:#b71c1c;
+
+}
+
+#sendRequest{
+
+    background:#1976d2;
+    color:white;
+
+}
+
+#sendRequest:hover{
+
+    background:#1565c0;
+
+}
+
+#printOrder{
+
+    background:#444;
+    color:white;
+
+}
+
+#printOrder:hover{
+
+    background:#222;
+
+}
+.workbenchPreview{
+    position:absolute;
+
+    left:0;
+    top:580px;
+
+    width:100%;
+
+    padding-top:120px;
+    box-sizing:border-box;
+}
+#workbenchImage {
+    display: block;
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    object-fit: contain;
+}
