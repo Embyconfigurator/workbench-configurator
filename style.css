@@ -396,7 +396,7 @@ button:hover{
 
 .workbenchPreview{
     top:700px;
-    transform:translateY(-480px);
+    transform:translateY(-120px);
 }
 }
 #backLayers,
