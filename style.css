@@ -344,3 +344,55 @@ button:hover{
     height: auto;
     object-fit: contain;
 }
+@media (max-width: 600px){
+
+    .container{
+        width:100%;
+        max-width:100%;
+        margin:0;
+        display:grid;
+        grid-template-columns:1fr;
+        gap:0;
+        border-radius:0;
+        box-shadow:none;
+        overflow:hidden;
+    }
+
+    .left{
+        width:100%;
+        min-height:600px;
+        padding:0;
+        display:flex;
+        justify-content:center;
+        background:#fff;
+    }
+
+    #imageContainer{
+        position:relative;
+        width:380px;
+        height:650px;
+        margin:0 auto;
+        transform:scale(0.88);
+        transform-origin:top center;
+    }
+
+    .workbenchPreview{
+        top:120px;
+    }
+
+    .right{
+        width:100%;
+        padding:20px 15px;
+    }
+
+    .right h1{
+        font-size:25px;
+    }
+
+    select,
+    input,
+    button{
+        width:100%;
+        max-width:100%;
+    }
+}
