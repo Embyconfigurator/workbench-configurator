@@ -353,42 +353,39 @@ button:hover{
         overflow-x:hidden;
     }
 
-.container{
-    width:100%;
-    max-width:100%;
-    margin:0;
-    display:grid;
-    grid-template-columns:1fr;
-    gap:0;
-    border-radius:0;
-    box-shadow:none;
+    .container{
+        width:100%;
+        max-width:100%;
+        margin:0;
+        display:grid;
+        grid-template-columns:1fr;
+        gap:0;
+        border-radius:0;
+        box-shadow:none;
+        overflow:visible;
+    }
 
-    /* ВАЖНО — НЕ РЕЖЕМ ВЕРХНИЕ ОПЦИИ */
-    overflow:visible;
-}
+    /* ОБЛАСТЬ СБОРКИ */
+    .left{
+        width:100%;
+        height:330px;
+        min-height:330px;
+        padding:0;
+        position:relative;
+        overflow:visible;
+        background:#fff;
+    }
 
-
-.left{
-    width:100%;
-    height:500px;
-    min-height:500px;
-    padding:0;
-    position:relative;
-
-    /* ВАЖНО */
-    overflow:visible;
-
-    background:#fff;
-}
-
-
-#imageContainer{
+    /*
+       Координатную систему опций НЕ ТРОГАЕМ.
+       JS ниже сам поставит сборку куда нужно.
+    */
+    #imageContainer{
     position:absolute;
     width:380px;
     height:820px;
     left:50%;
-    top:-120px;
-
+    top:0;
     margin:0;
     transform:translateX(-50%) scale(0.55);
     transform-origin:top center;
@@ -396,9 +393,9 @@ button:hover{
 
 .workbenchPreview{
     top:700px;
-    transform:translateY(-120px);
+    transform:none !important;
 }
-}
+
 #backLayers,
 #frontLayers,
 #workbenchPreview,
@@ -406,7 +403,7 @@ button:hover{
     overflow:visible !important;
 }
 
-    /* ПРАВАЯ ЧАСТЬ */
+    /* КОНФИГУРАТОР */
     .right{
         width:100%;
         max-width:100%;
@@ -420,8 +417,6 @@ button:hover{
         margin-bottom:25px;
     }
 
-
-    /* SELECT */
     select{
         width:100%;
         max-width:100%;
@@ -429,8 +424,6 @@ button:hover{
         font-size:16px;
     }
 
-
-    /* НЕ РАСТЯГИВАЕМ CHECKBOX */
     input[type="checkbox"]{
         width:22px !important;
         height:22px !important;
@@ -439,13 +432,11 @@ button:hover{
         flex-shrink:0;
     }
 
-    /* количество опций */
     input[type="number"]{
         width:65px !important;
         max-width:65px;
     }
 
-    /* обычные поля */
     input[type="text"],
     input[type="email"],
     input[type="tel"]{
@@ -453,8 +444,6 @@ button:hover{
         max-width:100%;
     }
 
-
-    /* КНОПКИ */
     button{
         width:100%;
         max-width:100%;
