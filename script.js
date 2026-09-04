@@ -1772,3 +1772,180 @@ catch (error) {
 }
 
 });
+function fitMobileWorkbench() {
+
+    const isMobile = window.matchMedia("(max-width: 600px)").matches;
+
+    const left = document.querySelector(".left");
+    const container = document.getElementById("imageContainer");
+    const workbenchImage = document.getElementById("workbenchImage");
+
+    if (!left || !container || !workbenchImage) return;
+
+
+    /* На компьютере вообще ничего не трогаем */
+    if (!isMobile) {
+        container.style.top = "";
+        left.style.height = "";
+        left.style.minHeight = "";
+        return;
+    }
+
+
+    requestAnimationFrame(() => {
+
+        const images = [
+            workbenchImage,
+            ...document.querySelectorAll("#backLayers img"),
+            ...document.querySelectorAll("#frontLayers img")
+        ].filter(img =>
+            img &&
+            img.complete &&
+            img.naturalWidth > 0
+        );
+
+
+        if (!images.length) return;
+
+
+        const rects = images
+            .map(img => img.getBoundingClientRect())
+            .filter(rect => rect.width > 0 && rect.height > 0);
+
+
+        if (!rects.length) return;
+
+
+        /* Самая верхняя точка всей сборки */
+        const minTop = Math.min(
+            ...rects.map(rect => rect.top)
+        );
+
+
+        /* Самая нижняя точка всей сборки */
+        const maxBottom = Math.max(
+            ...rects.map(rect => rect.bottom)
+        );
+
+
+        const leftRect = left.getBoundingClientRect();
+
+        /*
+           Хотим оставить сверху всего 15px,
+           независимо от количества опций.
+        */
+        const desiredTop = leftRect.top + 15;
+
+        const currentTop =
+            parseFloat(getComputedStyle(container).top) || 0;
+
+
+        const difference = desiredTop - minTop;
+
+
+        /* Поднимаем/опускаем ВСЮ сборку */
+        container.style.top =
+            (currentTop + difference) + "px";
+
+
+        /*
+           Высота блока = реальная высота всей сборки
+           + небольшой отступ снизу
+        */
+        const assemblyHeight = maxBottom - minTop;
+
+        const newHeight = Math.ceil(
+            assemblyHeight + 30
+        );
+
+
+        left.style.height = newHeight + "px";
+        left.style.minHeight = newHeight + "px";
+
+    });
+}
+const mobileWorkbenchImage =
+    document.getElementById("workbenchImage");
+
+
+/* Когда меняется сам верстак */
+if (mobileWorkbenchImage) {
+
+    mobileWorkbenchImage.addEventListener(
+        "load",
+        () => setTimeout(fitMobileWorkbench, 50)
+    );
+
+}
+
+
+/* Когда добавляются/убираются PNG-опции */
+const mobileBackLayers =
+    document.getElementById("backLayers");
+
+const mobileFrontLayers =
+    document.getElementById("frontLayers");
+
+
+const mobileLayersObserver =
+    new MutationObserver(() => {
+
+        document
+            .querySelectorAll("#backLayers img, #frontLayers img")
+            .forEach(img => {
+
+                if (img.dataset.mobileFitListener) return;
+
+                img.dataset.mobileFitListener = "1";
+
+                img.addEventListener(
+                    "load",
+                    () => setTimeout(fitMobileWorkbench, 30)
+                );
+
+            });
+
+
+        setTimeout(fitMobileWorkbench, 30);
+
+    });
+
+
+if (mobileBackLayers) {
+
+    mobileLayersObserver.observe(
+        mobileBackLayers,
+        {
+            childList:true,
+            subtree:true
+        }
+    );
+
+}
+
+
+if (mobileFrontLayers) {
+
+    mobileLayersObserver.observe(
+        mobileFrontLayers,
+        {
+            childList:true,
+            subtree:true
+        }
+    );
+
+}
+
+
+/* Поворот телефона / изменение размера */
+window.addEventListener(
+    "resize",
+    () => setTimeout(fitMobileWorkbench, 50)
+);
+
+
+/* Первый запуск */
+window.addEventListener(
+    "load",
+    () => setTimeout(fitMobileWorkbench, 150)
+);
