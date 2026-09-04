@@ -387,7 +387,7 @@ button:hover{
     width:380px;
     height:820px;
     left:50%;
-    top:-70px;
+    top:-120px;
 
     margin:0;
     transform:translateX(-50%) scale(0.55);
