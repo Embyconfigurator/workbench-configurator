@@ -346,6 +346,13 @@ button:hover{
 }
 @media (max-width: 600px){
 
+    body{
+        width:100%;
+        margin:0;
+        padding:0;
+        overflow-x:hidden;
+    }
+
     .container{
         width:100%;
         max-width:100%;
@@ -358,41 +365,124 @@ button:hover{
         overflow:hidden;
     }
 
+    /* КАРТИНКА ВЕРСТАКА */
     .left{
         width:100%;
-        min-height:600px;
+        height:520px;
+        min-height:0;
         padding:0;
-        display:flex;
-        justify-content:center;
+        position:relative;
+        overflow:hidden;
         background:#fff;
     }
 
     #imageContainer{
-        position:relative;
+        position:absolute;
         width:380px;
-        height:650px;
-        margin:0 auto;
-        transform:scale(0.88);
+        height:700px;
+
+        left:50%;
+        top:0;
+
+        margin:0;
+
+        transform:translateX(-50%) scale(0.88);
         transform-origin:top center;
     }
 
+    /*
+       ВАЖНО:
+       возвращаем рабочую координату.
+       Не ставим 120px.
+    */
     .workbenchPreview{
-        top:120px;
+        top:580px;
     }
 
+
+    /* ПРАВАЯ ЧАСТЬ */
     .right{
         width:100%;
-        padding:20px 15px;
+        max-width:100%;
+        padding:20px 16px;
+        overflow:hidden;
     }
 
     .right h1{
-        font-size:25px;
+        font-size:28px !important;
+        line-height:1.15;
+        margin-bottom:25px;
     }
 
-    select,
-    input,
+
+    /* SELECT */
+    select{
+        width:100%;
+        max-width:100%;
+        height:48px;
+        font-size:16px;
+    }
+
+
+    /* НЕ РАСТЯГИВАЕМ CHECKBOX */
+    input[type="checkbox"]{
+        width:22px !important;
+        height:22px !important;
+        min-width:22px;
+        margin-right:10px;
+        flex-shrink:0;
+    }
+
+    /* количество опций */
+    input[type="number"]{
+        width:65px !important;
+        max-width:65px;
+    }
+
+    /* обычные поля */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"]{
+        width:100%;
+        max-width:100%;
+    }
+
+
+    /* КНОПКИ */
     button{
         width:100%;
         max-width:100%;
+        white-space:normal;
+        font-size:18px;
+    }
+
+
+    /* ТЕКУЩАЯ КОНФИГУРАЦИЯ */
+    #liveOrderPreview{
+        width:100%;
+        max-width:100%;
+        overflow:hidden;
+    }
+
+    #liveOrderPreview div{
+        max-width:100%;
+        min-width:0;
+        flex-wrap:wrap !important;
+    }
+
+    #liveOrderPreview span,
+    #liveOrderPreview b{
+        max-width:100%;
+        overflow-wrap:anywhere;
+        word-break:normal;
+    }
+
+
+    /* ЗАКАЗ */
+    #orderList,
+    #orderItems{
+        width:100%;
+        max-width:100%;
+        overflow:hidden;
     }
 }
