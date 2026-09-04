@@ -387,9 +387,7 @@ button:hover{
     width:380px;
     height:820px;
     left:50%;
-
-    /* поднимаем весь блок обратно вверх */
-    top:-60px;
+    top:80px;
 
     margin:0;
     transform:translateX(-50%) scale(0.55);
@@ -397,10 +395,14 @@ button:hover{
 }
 
 .workbenchPreview{
-    /* создаём настоящий запас СВЕРХ под отрицательные Y опций */
     top:700px;
 }
-
+#backLayers,
+#frontLayers,
+#workbenchPreview,
+.workbenchPreview{
+    overflow:visible !important;
+}
 
     /* ПРАВАЯ ЧАСТЬ */
     .right{
