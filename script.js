@@ -3,14 +3,103 @@ let order = [];
 
 async function loadConfigurator() {
 
-    const response = await fetch(API);
-    db = await response.json();
+    const CACHE_KEY = "workbenchConfiguratorData";
+    const CACHE_TIME_KEY = "workbenchConfiguratorDataTime";
 
-    console.log(db);
+    // Кэш храним 1 час
+    const CACHE_LIFETIME = 60 * 60 * 1000;
 
-fillWidths();
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    const cachedTime = Number(
+        localStorage.getItem(CACHE_TIME_KEY) || 0
+    );
 
-filterWorkbenchTypes();
+    const cacheIsFresh =
+        cachedData &&
+        Date.now() - cachedTime < CACHE_LIFETIME;
+
+
+    // 1. Если есть свежий кэш — показываем конфигуратор сразу
+    if (cacheIsFresh) {
+
+        try {
+
+            db = JSON.parse(cachedData);
+
+            fillWidths();
+            filterWorkbenchTypes();
+
+        }
+        catch (error) {
+
+            console.warn("Помилка читання кешу:", error);
+
+        }
+
+    }
+
+
+    // 2. Всё равно обновляем данные с сервера
+    try {
+
+        const response = await fetch(API);
+
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
+
+        const freshData = await response.json();
+
+        db = freshData;
+
+        localStorage.setItem(
+            CACHE_KEY,
+            JSON.stringify(freshData)
+        );
+
+        localStorage.setItem(
+            CACHE_TIME_KEY,
+            String(Date.now())
+        );
+
+
+        // Если кэша не было — строим страницу после загрузки API
+        if (!cacheIsFresh) {
+
+            fillWidths();
+            filterWorkbenchTypes();
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "Не вдалося оновити дані конфігуратора:",
+            error
+        );
+
+        // Если API упал, но старый кэш существует —
+        // всё равно используем его.
+        if (!cacheIsFresh && cachedData) {
+
+            try {
+
+                db = JSON.parse(cachedData);
+
+                fillWidths();
+                filterWorkbenchTypes();
+
+            }
+            catch (cacheError) {
+
+                console.error(cacheError);
+
+            }
+
+        }
+
+    }
 
 }
 function updateImage(){
