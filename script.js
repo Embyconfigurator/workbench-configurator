@@ -1907,7 +1907,7 @@ catch (error) {
 
 });
 /* =====================================================
-   ОФОРМЛЕНИЕ ЗАКАЗА
+   CHECKOUT
 ===================================================== */
 
 const checkoutBtn =
@@ -1936,7 +1936,7 @@ checkoutBtn.addEventListener("click", () => {
     if (order.length === 0) {
 
         alert(
-            "Спочатку додайте хоча б один верстак до замовлення."
+            "Спочатку додайте хоча б один верстак до кошика."
         );
 
         return;
@@ -1947,7 +1947,7 @@ checkoutBtn.addEventListener("click", () => {
 });
 
 
-/* ---------- ЗАКРЫТЬ ---------- */
+/* ---------- ЗАКРЫТЬ ОФОРМЛЕНИЕ ---------- */
 
 closeCheckoutBtn.addEventListener("click", () => {
 
@@ -1956,7 +1956,7 @@ closeCheckoutBtn.addEventListener("click", () => {
 });
 
 
-/* ---------- ГЕНЕРАЦИЯ НОМЕРА ЗАКАЗА ---------- */
+/* ---------- НОМЕР ЗАКАЗА ---------- */
 
 function generateOrderNumber(){
 
@@ -1972,14 +1972,16 @@ function generateOrderNumber(){
         String(now.getDate()).padStart(2,"0");
 
     const random =
-        Math.floor(1000 + Math.random() * 9000);
+        Math.floor(
+            1000 + Math.random() * 9000
+        );
 
     return `EMBY-${year}${month}${day}-${random}`;
 
 }
 
 
-/* ---------- ПОДТВЕРДИТЬ ЗАКАЗ ---------- */
+/* ---------- ПОДТВЕРДИТЬ ---------- */
 
 confirmCheckoutBtn.addEventListener(
     "click",
@@ -1994,6 +1996,12 @@ confirmCheckoutBtn.addEventListener(
         const phone =
             document
                 .getElementById("checkoutPhone")
+                .value
+                .trim();
+
+        const email =
+            document
+                .getElementById("checkoutEmail")
                 .value
                 .trim();
 
@@ -2019,13 +2027,7 @@ confirmCheckoutBtn.addEventListener(
                 .getElementById("checkoutPayment")
                 .value;
 
-        const email =
-            document
-                .getElementById("checkoutEmail")
-                .value
-                .trim();
-
-        const clientComment =
+        const comment =
             document
                 .getElementById("checkoutComment")
                 .value
@@ -2036,7 +2038,9 @@ confirmCheckoutBtn.addEventListener(
 
         if (!fullName) {
 
-            alert("Вкажіть ім’я та прізвище.");
+            alert(
+                "Вкажіть ім’я та прізвище."
+            );
 
             return;
         }
@@ -2044,7 +2048,9 @@ confirmCheckoutBtn.addEventListener(
 
         if (!phone) {
 
-            alert("Вкажіть номер телефону.");
+            alert(
+                "Вкажіть номер телефону."
+            );
 
             return;
         }
@@ -2052,7 +2058,9 @@ confirmCheckoutBtn.addEventListener(
 
         if (!city) {
 
-            alert("Вкажіть місто.");
+            alert(
+                "Вкажіть місто."
+            );
 
             return;
         }
@@ -2060,7 +2068,9 @@ confirmCheckoutBtn.addEventListener(
 
         if (!delivery) {
 
-            alert("Оберіть пошту.");
+            alert(
+                "Оберіть службу доставки."
+            );
 
             return;
         }
@@ -2068,7 +2078,9 @@ confirmCheckoutBtn.addEventListener(
 
         if (!branch) {
 
-            alert("Вкажіть номер відділення.");
+            alert(
+                "Вкажіть номер відділення."
+            );
 
             return;
         }
@@ -2076,7 +2088,9 @@ confirmCheckoutBtn.addEventListener(
 
         if (!payment) {
 
-            alert("Оберіть спосіб оплати.");
+            alert(
+                "Оберіть спосіб оплати."
+            );
 
             return;
         }
@@ -2088,7 +2102,7 @@ confirmCheckoutBtn.addEventListener(
             generateOrderNumber();
 
 
-        /* ---------- СОСТАВ ЗАКАЗА ---------- */
+        /* ---------- ТЕКСТ ЗАКАЗА ---------- */
 
         const orderText =
             order
@@ -2131,8 +2145,8 @@ confirmCheckoutBtn.addEventListener(
                             text +=
                                 `- ${opt.name}: ` +
                                 `${opt.qty} × ` +
-                                `${opt.unitPrice.toLocaleString("uk-UA")} = ` +
-                                `${opt.totalPrice.toLocaleString("uk-UA")} грн\n`;
+                                `${Number(opt.unitPrice).toLocaleString("uk-UA")} = ` +
+                                `${Number(opt.totalPrice).toLocaleString("uk-UA")} грн\n`;
 
                         });
 
@@ -2151,7 +2165,7 @@ confirmCheckoutBtn.addEventListener(
                 );
 
 
-        /* ---------- СУММА ---------- */
+        /* ---------- ОБЩАЯ СУММА ---------- */
 
         const total =
             order.reduce(
@@ -2161,11 +2175,11 @@ confirmCheckoutBtn.addEventListener(
             );
 
 
-        /* ---------- ДАННЫЕ КЛИЕНТА ---------- */
+        /* ---------- ДАННЫЕ О ДОСТАВКЕ ---------- */
 
-        const checkoutInfo = `
+        const customerInfo = `
 
-НОМЕР ЗАМОВЛЕННЯ:
+Номер замовлення:
 ${orderNumber}
 
 Ім’я та прізвище:
@@ -2174,10 +2188,13 @@ ${fullName}
 Телефон:
 ${phone}
 
+Email:
+${email || "Не вказано"}
+
 Місто:
 ${city}
 
-Пошта:
+Служба доставки:
 ${delivery}
 
 Відділення:
@@ -2186,24 +2203,21 @@ ${branch}
 Спосіб оплати:
 ${payment}
 
-Email:
-${email || "Не вказано"}
-
 Коментар:
-${clientComment || "Без коментаря"}
+${comment || "Без коментаря"}
 
-==============================
+============================
 
 ${orderText}
 
-==============================
+============================
 
 РАЗОМ:
 ${total.toLocaleString("uk-UA")} грн
 `;
 
 
-        /* ---------- КНОПКА ---------- */
+        /* ---------- БЛОКИРУЕМ КНОПКУ ---------- */
 
         confirmCheckoutBtn.disabled = true;
 
@@ -2211,9 +2225,13 @@ ${total.toLocaleString("uk-UA")} грн
             "Оформлюємо...";
 
 
-        /* ---------- ОТПРАВКА ---------- */
-
         try {
+
+            /*
+               Используем тот же способ отправки,
+               который уже работает у тебя
+               для Email-запроса.
+            */
 
             const form =
                 document.createElement("form");
@@ -2229,11 +2247,6 @@ ${total.toLocaleString("uk-UA")} грн
                 "none";
 
 
-            /*
-               Используем те же поля,
-               которые уже принимает твой Apps Script.
-            */
-
             const fields = {
 
                 action: "sendOrder",
@@ -2244,13 +2257,21 @@ ${total.toLocaleString("uk-UA")} грн
 
                 email: email,
 
-                comment: checkoutInfo,
+                comment: customerInfo,
 
-                order: checkoutInfo,
+                order: orderText,
 
                 total: total,
 
-                orderNumber: orderNumber
+                orderNumber: orderNumber,
+
+                city: city,
+
+                delivery: delivery,
+
+                branch: branch,
+
+                payment: payment
 
             };
 
@@ -2284,16 +2305,18 @@ ${total.toLocaleString("uk-UA")} грн
             form.submit();
 
 
-            /* ---------- УСПЕХ ---------- */
-
             setTimeout(() => {
 
                 form.remove();
 
 
+                /* Закрываем checkout */
+
                 checkoutModal.style.display =
                     "none";
 
+
+                /* Показываем номер заказа */
 
                 document
                     .getElementById(
@@ -2307,6 +2330,8 @@ ${total.toLocaleString("uk-UA")} грн
                     "flex";
 
 
+                /* Возвращаем кнопку */
+
                 confirmCheckoutBtn.disabled =
                     false;
 
@@ -2316,7 +2341,7 @@ ${total.toLocaleString("uk-UA")} грн
 
                 /* ОЧИЩАЕМ КОРЗИНУ */
 
-                order = [];
+                order.length = 0;
 
                 renderOrder();
 
@@ -2335,6 +2360,12 @@ ${total.toLocaleString("uk-UA")} грн
                 document
                     .getElementById(
                         "checkoutPhone"
+                    )
+                    .value = "";
+
+                document
+                    .getElementById(
+                        "checkoutEmail"
                     )
                     .value = "";
 
@@ -2359,12 +2390,6 @@ ${total.toLocaleString("uk-UA")} грн
                 document
                     .getElementById(
                         "checkoutPayment"
-                    )
-                    .value = "";
-
-                document
-                    .getElementById(
-                        "checkoutEmail"
                     )
                     .value = "";
 
@@ -2403,7 +2428,7 @@ ${total.toLocaleString("uk-UA")} грн
 );
 
 
-/* ---------- ЗАКРЫТЬ ОКНО УСПЕХА ---------- */
+/* ---------- ЗАКРЫТЬ УСПЕШНЫЙ ЗАКАЗ ---------- */
 
 closeSuccessBtn.addEventListener(
     "click",
