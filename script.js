@@ -1861,3 +1861,511 @@ catch (error) {
 }
 
 });
+/* =====================================================
+   ОФОРМЛЕНИЕ ЗАКАЗА
+===================================================== */
+
+const checkoutBtn =
+    document.getElementById("checkoutBtn");
+
+const checkoutModal =
+    document.getElementById("checkoutModal");
+
+const closeCheckoutBtn =
+    document.getElementById("closeCheckoutBtn");
+
+const confirmCheckoutBtn =
+    document.getElementById("confirmCheckoutBtn");
+
+const orderSuccessModal =
+    document.getElementById("orderSuccessModal");
+
+const closeSuccessBtn =
+    document.getElementById("closeSuccessBtn");
+
+
+/* ---------- ОТКРЫТЬ ОФОРМЛЕНИЕ ---------- */
+
+checkoutBtn.addEventListener("click", () => {
+
+    if (order.length === 0) {
+
+        alert(
+            "Спочатку додайте хоча б один верстак до замовлення."
+        );
+
+        return;
+    }
+
+    checkoutModal.style.display = "flex";
+
+});
+
+
+/* ---------- ЗАКРЫТЬ ---------- */
+
+closeCheckoutBtn.addEventListener("click", () => {
+
+    checkoutModal.style.display = "none";
+
+});
+
+
+/* ---------- ГЕНЕРАЦИЯ НОМЕРА ЗАКАЗА ---------- */
+
+function generateOrderNumber(){
+
+    const now = new Date();
+
+    const year =
+        String(now.getFullYear()).slice(-2);
+
+    const month =
+        String(now.getMonth() + 1).padStart(2,"0");
+
+    const day =
+        String(now.getDate()).padStart(2,"0");
+
+    const random =
+        Math.floor(1000 + Math.random() * 9000);
+
+    return `EMBY-${year}${month}${day}-${random}`;
+
+}
+
+
+/* ---------- ПОДТВЕРДИТЬ ЗАКАЗ ---------- */
+
+confirmCheckoutBtn.addEventListener(
+    "click",
+    () => {
+
+        const fullName =
+            document
+                .getElementById("checkoutFullName")
+                .value
+                .trim();
+
+        const phone =
+            document
+                .getElementById("checkoutPhone")
+                .value
+                .trim();
+
+        const city =
+            document
+                .getElementById("checkoutCity")
+                .value
+                .trim();
+
+        const delivery =
+            document
+                .getElementById("checkoutDelivery")
+                .value;
+
+        const branch =
+            document
+                .getElementById("checkoutBranch")
+                .value
+                .trim();
+
+        const payment =
+            document
+                .getElementById("checkoutPayment")
+                .value;
+
+        const email =
+            document
+                .getElementById("checkoutEmail")
+                .value
+                .trim();
+
+        const clientComment =
+            document
+                .getElementById("checkoutComment")
+                .value
+                .trim();
+
+
+        /* ---------- ПРОВЕРКА ---------- */
+
+        if (!fullName) {
+
+            alert("Вкажіть ім’я та прізвище.");
+
+            return;
+        }
+
+
+        if (!phone) {
+
+            alert("Вкажіть номер телефону.");
+
+            return;
+        }
+
+
+        if (!city) {
+
+            alert("Вкажіть місто.");
+
+            return;
+        }
+
+
+        if (!delivery) {
+
+            alert("Оберіть пошту.");
+
+            return;
+        }
+
+
+        if (!branch) {
+
+            alert("Вкажіть номер відділення.");
+
+            return;
+        }
+
+
+        if (!payment) {
+
+            alert("Оберіть спосіб оплати.");
+
+            return;
+        }
+
+
+        /* ---------- НОМЕР ЗАКАЗА ---------- */
+
+        const orderNumber =
+            generateOrderNumber();
+
+
+        /* ---------- СОСТАВ ЗАКАЗА ---------- */
+
+        const orderText =
+            order
+                .map((item,index) => {
+
+                    let text = `
+
+Верстак ${index + 1}
+
+Ширина: ${item.width}
+Тип: ${item.type}
+Стільниця: ${item.top}
+`;
+
+                    if(item.left){
+
+                        text +=
+                            `Тумба 1: ${item.left}\n`;
+
+                    }
+
+
+                    if(item.right){
+
+                        text +=
+                            `Тумба 2: ${item.right}\n`;
+
+                    }
+
+
+                    if(
+                        item.options &&
+                        item.options.length
+                    ){
+
+                        text += "\nОпції:\n";
+
+                        item.options.forEach(opt => {
+
+                            text +=
+                                `- ${opt.name}: ` +
+                                `${opt.qty} × ` +
+                                `${opt.unitPrice.toLocaleString("uk-UA")} = ` +
+                                `${opt.totalPrice.toLocaleString("uk-UA")} грн\n`;
+
+                        });
+
+                    }
+
+
+                    text +=
+                        `\nВартість: ` +
+                        `${Number(item.price || 0).toLocaleString("uk-UA")} грн`;
+
+                    return text;
+
+                })
+                .join(
+                    "\n\n-----------------------------\n"
+                );
+
+
+        /* ---------- СУММА ---------- */
+
+        const total =
+            order.reduce(
+                (sum,item) =>
+                    sum + Number(item.price || 0),
+                0
+            );
+
+
+        /* ---------- ДАННЫЕ КЛИЕНТА ---------- */
+
+        const checkoutInfo = `
+
+НОМЕР ЗАМОВЛЕННЯ:
+${orderNumber}
+
+Ім’я та прізвище:
+${fullName}
+
+Телефон:
+${phone}
+
+Місто:
+${city}
+
+Пошта:
+${delivery}
+
+Відділення:
+${branch}
+
+Спосіб оплати:
+${payment}
+
+Email:
+${email || "Не вказано"}
+
+Коментар:
+${clientComment || "Без коментаря"}
+
+==============================
+
+${orderText}
+
+==============================
+
+РАЗОМ:
+${total.toLocaleString("uk-UA")} грн
+`;
+
+
+        /* ---------- КНОПКА ---------- */
+
+        confirmCheckoutBtn.disabled = true;
+
+        confirmCheckoutBtn.textContent =
+            "Оформлюємо...";
+
+
+        /* ---------- ОТПРАВКА ---------- */
+
+        try {
+
+            const form =
+                document.createElement("form");
+
+            form.method = "POST";
+
+            form.action = API;
+
+            form.target =
+                "emailHiddenFrame";
+
+            form.style.display =
+                "none";
+
+
+            /*
+               Используем те же поля,
+               которые уже принимает твой Apps Script.
+            */
+
+            const fields = {
+
+                action: "sendOrder",
+
+                name: fullName,
+
+                phone: phone,
+
+                email: email,
+
+                comment: checkoutInfo,
+
+                order: checkoutInfo,
+
+                total: total,
+
+                orderNumber: orderNumber
+
+            };
+
+
+            Object.entries(fields)
+                .forEach(
+                    ([key,value]) => {
+
+                        const input =
+                            document.createElement(
+                                "input"
+                            );
+
+                        input.type =
+                            "hidden";
+
+                        input.name =
+                            key;
+
+                        input.value =
+                            value;
+
+                        form.appendChild(input);
+
+                    }
+                );
+
+
+            document.body.appendChild(form);
+
+            form.submit();
+
+
+            /* ---------- УСПЕХ ---------- */
+
+            setTimeout(() => {
+
+                form.remove();
+
+
+                checkoutModal.style.display =
+                    "none";
+
+
+                document
+                    .getElementById(
+                        "successOrderNumber"
+                    )
+                    .textContent =
+                        "№ " + orderNumber;
+
+
+                orderSuccessModal.style.display =
+                    "flex";
+
+
+                confirmCheckoutBtn.disabled =
+                    false;
+
+                confirmCheckoutBtn.textContent =
+                    "Підтвердити замовлення";
+
+
+                /* ОЧИЩАЕМ КОРЗИНУ */
+
+                order = [];
+
+                renderOrder();
+
+                currentWorkbenchAdded =
+                    false;
+
+
+                /* ОЧИЩАЕМ ФОРМУ */
+
+                document
+                    .getElementById(
+                        "checkoutFullName"
+                    )
+                    .value = "";
+
+                document
+                    .getElementById(
+                        "checkoutPhone"
+                    )
+                    .value = "";
+
+                document
+                    .getElementById(
+                        "checkoutCity"
+                    )
+                    .value = "";
+
+                document
+                    .getElementById(
+                        "checkoutDelivery"
+                    )
+                    .value = "";
+
+                document
+                    .getElementById(
+                        "checkoutBranch"
+                    )
+                    .value = "";
+
+                document
+                    .getElementById(
+                        "checkoutPayment"
+                    )
+                    .value = "";
+
+                document
+                    .getElementById(
+                        "checkoutEmail"
+                    )
+                    .value = "";
+
+                document
+                    .getElementById(
+                        "checkoutComment"
+                    )
+                    .value = "";
+
+            },1200);
+
+        }
+
+        catch(error){
+
+            console.error(
+                "Помилка оформлення замовлення:",
+                error
+            );
+
+
+            alert(
+                "Не вдалося оформити замовлення."
+            );
+
+
+            confirmCheckoutBtn.disabled =
+                false;
+
+            confirmCheckoutBtn.textContent =
+                "Підтвердити замовлення";
+
+        }
+
+    }
+);
+
+
+/* ---------- ЗАКРЫТЬ ОКНО УСПЕХА ---------- */
+
+closeSuccessBtn.addEventListener(
+    "click",
+    () => {
+
+        orderSuccessModal.style.display =
+            "none";
+
+    }
+);
