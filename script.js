@@ -1410,65 +1410,97 @@ document.getElementById("addToCart").addEventListener("click", async () => {
 
 let previewImage;
 
+const leftBlock = document.querySelector(".left");
+
+const oldPosition = leftBlock.style.position;
+const oldTop = leftBlock.style.top;
+const oldBackground = leftBlock.style.background;
+
 try {
 
-    // Берём реально отображаемый верстак и все реально отображаемые слои
+    /*
+       Временно отключаем sticky только на время
+       создания фотографии для корзины/PDF.
+    */
+
+    leftBlock.style.position = "relative";
+    leftBlock.style.top = "0";
+    leftBlock.style.background = "#ffffff";
+
+    // Даём браузеру пересчитать положение элементов
+    await new Promise(resolve =>
+        requestAnimationFrame(() =>
+            requestAnimationFrame(resolve)
+        )
+    );
+
+
     const elements = [
         document.getElementById("workbenchImage"),
         ...document.querySelectorAll("#backLayers img"),
         ...document.querySelectorAll("#frontLayers img")
     ].filter(Boolean);
 
+
     if (!elements.length) {
-        throw new Error("Немає елементів для створення зображення");
+        throw new Error(
+            "Немає елементів для створення зображення"
+        );
     }
 
-    // Находим общую область всей композиции:
-    // верстак + панели + стойки + остальные опции
-    const rects = elements.map(el => el.getBoundingClientRect());
 
-    const left = Math.min(...rects.map(r => r.left));
-    const top = Math.min(...rects.map(r => r.top));
-    const right = Math.max(...rects.map(r => r.right));
-    const bottom = Math.max(...rects.map(r => r.bottom));
+    const rects = elements.map(
+        el => el.getBoundingClientRect()
+    );
+
+
+    const left =
+        Math.min(...rects.map(r => r.left));
+
+    const top =
+        Math.min(...rects.map(r => r.top));
+
+    const right =
+        Math.max(...rects.map(r => r.right));
+
+    const bottom =
+        Math.max(...rects.map(r => r.bottom));
+
 
     const width = right - left;
     const height = bottom - top;
 
-    // Снимаем именно ту область страницы,
-    // в которой реально виден готовый верстак со всеми опциями
-const oldLeftBackground =
-    document.querySelector(".left").style.background;
 
-document.querySelector(".left").style.background = "#ffffff";
+    const previewCanvas =
+        await html2canvas(document.body, {
 
-const previewCanvas = await html2canvas(document.body, {
+            scale: 2,
 
-    scale: 2,
+            useCORS: true,
 
-    useCORS: true,
+            allowTaint: true,
 
-    backgroundColor: "#ffffff",
+            backgroundColor: "#ffffff",
 
-    logging: false,
+            logging: false,
 
-    x: left + window.scrollX,
+            x: left + window.scrollX,
 
-    y: top + window.scrollY,
+            y: top + window.scrollY,
 
-    width: width,
+            width: width,
 
-    height: height,
+            height: height,
 
-    scrollX: 0,
+            scrollX: 0,
 
-    scrollY: 0
+            scrollY: 0
 
-});
+        });
 
-document.querySelector(".left").style.background =
-    oldLeftBackground;
-    previewImage = previewCanvas.toDataURL("image/png");
+
+    previewImage =
+        previewCanvas.toDataURL("image/png");
 
 }
 catch (error) {
@@ -1483,6 +1515,19 @@ catch (error) {
     );
 
     return;
+
+}
+finally {
+
+    /*
+       Возвращаем sticky точно таким,
+       каким он был на сайте.
+    */
+
+    leftBlock.style.position = oldPosition;
+    leftBlock.style.top = oldTop;
+    leftBlock.style.background = oldBackground;
+
 }
     const item = {
         width: document.getElementById("size").selectedOptions[0].text,
