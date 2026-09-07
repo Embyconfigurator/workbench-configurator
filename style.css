@@ -290,14 +290,14 @@ button:hover{
 
 #downloadPdf{
 
-    background:#d32f2f;
+    background:#ebfc07;
     color:white;
 
 }
 
 #downloadPdf:hover{
 
-    background:#b71c1c;
+    background:#ebfc07;
 
 }
 
@@ -491,6 +491,86 @@ button:hover{
         position:sticky;
         top:20px;
         align-self:start;
+    }
+
+}
+/* ================= CHECKOUT ================= */
+
+.checkoutBtn{
+    background:#e53935;
+    color:#fff;
+    font-size:18px;
+    font-weight:700;
+    border:2px solid #e53935;
+}
+
+.checkoutBtn:hover{
+    background:#c62828;
+    color:#fff;
+}
+
+.checkoutModalBox{
+    width:520px;
+    max-width:calc(100% - 30px);
+    max-height:90vh;
+    overflow-y:auto;
+    text-align:left;
+}
+
+
+.checkoutModalBox h2{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+
+.checkoutModalBox label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:7px;
+    font-weight:600;
+}
+
+
+.checkoutModalBox input,
+.checkoutModalBox select,
+.checkoutModalBox textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #d6d6d6;
+    border-radius:8px;
+    font-size:16px;
+    font-family:Arial, sans-serif;
+}
+
+
+.checkoutModalBox textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+
+#confirmCheckoutBtn{
+    margin-top:25px;
+    background:#ebfc07;
+    color:#000;
+    border:2px solid #000;
+    font-weight:700;
+}
+
+
+#confirmCheckoutBtn:hover{
+    background:#000;
+    color:#fff;
+}
+
+
+@media (max-width:600px){
+
+    .checkoutModalBox{
+        width:calc(100% - 24px);
+        max-height:92vh;
+        padding:24px 18px;
     }
 
 }
