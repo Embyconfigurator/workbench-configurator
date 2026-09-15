@@ -574,3 +574,15 @@ button:hover{
     }
 
 }
+@media (max-width: 600px){
+
+    #imageContainer{
+        top:-30px;
+    }
+
+    .left{
+        height:300px;
+        min-height:300px;
+    }
+
+}
